@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>State News — Elementor Kit Documentation v1.0</title>
+<style>
+  :root{
+    --ink:#0e1726; --ink-2:#334155; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff; --bg-2:#f7f9fb;
+    --accent:#12BF2A; --accent-d:#0a8f1e; --navy:#001A39; --amber:#b45309; --red:#b91c1c;
+    --code-bg:#0f172a; --code-fg:#e2e8f0; --radius:14px;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+
+  /* ---------- layout ---------- */
+  .wrap{display:flex;max-width:1440px;margin:0 auto}
+  nav.side{width:290px;flex:0 0 290px;border-right:1px solid var(--line);padding:26px 18px 60px;position:sticky;top:0;align-self:flex-start;height:100vh;overflow:auto;background:var(--bg-2)}
+  main{flex:1;min-width:0;padding:0 46px 90px;max-width:1080px}
+  @media (max-width:1024px){
+    nav.side{position:fixed;z-index:40;left:-300px;top:0;transition:left .22s ease;box-shadow:0 10px 40px rgba(2,6,23,.18)}
+    nav.side.open{left:0}
+    main{padding:0 20px 70px}
+    .menu-btn{display:inline-flex !important}
+  }
+
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .brand .dot{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--navy),#0b3462);display:grid;place-items:center;color:#fff;font-weight:800;font-size:13px;letter-spacing:.5px}
+  .brand b{font-size:15px;letter-spacing:.2px}
+  .brand small{display:block;color:var(--muted);font-weight:500;font-size:11.5px;letter-spacing:.4px;text-transform:uppercase}
+  nav.side .ver{display:inline-block;margin:8px 0 18px;font-size:11.5px;font-weight:700;color:var(--accent-d);background:#e9f9ec;border:1px solid #c9efd1;border-radius:999px;padding:3px 10px}
+  nav.side ol{list-style:none;margin:0;padding:0}
+  nav.side li{margin:1px 0}
+  nav.side a.navlink{display:block;padding:7px 10px;border-radius:9px;color:var(--ink-2);text-decoration:none;font-size:13.6px;font-weight:500;border-left:2px solid transparent}
+  nav.side a.navlink:hover{background:#eef2f7;color:var(--ink)}
+  nav.side a.navlink.active{background:#fff;color:var(--ink);font-weight:700;border-left-color:var(--accent);box-shadow:0 1px 2px rgba(15,23,42,.06)}
+  nav.side .grp{margin:18px 0 6px;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:700;padding-left:10px}
+  nav.side .hint{font-size:11.5px;color:var(--muted);padding:14px 10px 0;border-top:1px solid var(--line);margin-top:16px}
+
+  /* ---------- topbar ---------- */
+  .topbar{display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin:0 -46px 26px;padding:12px 46px}
+  @media (max-width:1024px){ .topbar{margin:0 -20px 20px;padding:10px 20px} }
+  .menu-btn{display:none;align-items:center;gap:7px;border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 11px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+  .crumb{font-size:13px;color:var(--muted)}
+  .crumb b{color:var(--ink)}
+  .topbar .spacer{flex:1}
+  .pill{font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--ink-2);background:#fff;text-decoration:none}
+
+  /* ---------- hero ---------- */
+  .hero{margin-top:26px;background:
+      radial-gradient(1100px 420px at 12% -30%,rgba(18,191,42,.20),transparent 60%),
+      radial-gradient(900px 380px at 92% -10%,rgba(0,26,57,.16),transparent 62%),
+      linear-gradient(180deg,#ffffff,#f7f9fb);
+    border:1px solid var(--line);border-radius:20px;padding:40px 38px 34px;margin-bottom:34px}
+  .hero .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-d);font-weight:800}
+  .hero h1{font-size:40px;line-height:1.12;margin:12px 0 10px;letter-spacing:-.02em}
+  .hero p.lead{font-size:17px;color:var(--ink-2);max-width:74ch;margin:0 0 22px}
+  .hero .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-size:12.5px;font-weight:600;color:var(--ink-2);background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+  .chip.ok{color:var(--accent-d);background:#eefaf0;border-color:#ccefd3}
+
+  /* ---------- typography ---------- */
+  h2{scroll-margin-top:82px;font-size:27px;letter-spacing:-.015em;margin:52px 0 6px;padding-top:10px}
+  h2 .num{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--navy);color:#fff;font-size:13px;vertical-align:4px;margin-right:10px;font-weight:700}
+  h2 + .sub{color:var(--muted);margin:0 0 18px;font-size:15px}
+  h3{scroll-margin-top:82px;font-size:19px;margin:30px 0 8px;letter-spacing:-.01em}
+  h4{font-size:15.5px;margin:22px 0 6px}
+  p{margin:10px 0}
+  ul,ol{margin:10px 0 10px 22px;padding:0}
+  li{margin:5px 0}
+  code{font-family:var(--mono);font-size:.88em;background:#eef2f7;border:1px solid #e2e8f0;border-radius:5px;padding:1px 5px;color:#0f172a}
+  a{color:var(--accent-d)}
+  hr{border:0;border-top:1px solid var(--line);margin:40px 0}
+
+  /* ---------- components ---------- */
+  .card{border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;background:#fff;margin:16px 0}
+  .grid{display:grid;gap:14px}
+  .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  @media (max-width:860px){ .g2,.g3{grid-template-columns:1fr} }
+  .card h3{margin-top:0}
+  .kpi{font-size:26px;font-weight:800;letter-spacing:-.02em}
+  .kpi small{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+
+  table{width:100%;border-collapse:separate;border-spacing:0;font-size:14.2px;margin:16px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  thead th{background:var(--bg-2);text-align:left;font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-2);font-weight:800;padding:11px 13px;border-bottom:1px solid var(--line)}
+  td{padding:11px 13px;border-bottom:1px solid #eef2f7;vertical-align:top}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr:hover td{background:#fbfdff}
+  td code{white-space:nowrap}
+
+  .note,.warn,.tip{border-radius:12px;padding:14px 16px 14px 46px;margin:16px 0;position:relative;font-size:14.6px}
+  .note{background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a}
+  .warn{background:#fff7ed;border:1px solid #fed7aa;color:#7c2d12}
+  .tip{background:#eefaf0;border:1px solid #ccefd3;color:#14532d}
+  .note::before,.warn::before,.tip::before{position:absolute;left:15px;top:12px;font-size:15px;font-weight:800}
+  .note::before{content:"i";display:grid;place-items:center;width:19px;height:19px;border-radius:50%;background:#1d4ed8;color:#fff;font-family:Georgia,serif;font-style:italic;font-size:12px;line-height:1}
+  .warn::before{content:"!";display:grid;place-items:center;width:19px;height:19px;border-radius:6px;background:#ea580c;color:#fff;font-size:12px;line-height:1}
+  .tip::before{content:"✓";display:grid;place-items:center;width:19px;height:19px;border-radius:6px;background:#16a34a;color:#fff;font-size:11px;line-height:1}
+
+  pre{background:var(--code-bg);color:var(--code-fg);border-radius:12px;padding:15px 17px;overflow:auto;font-family:var(--mono);font-size:13px;line-height:1.6;margin:14px 0}
+  pre code{background:none;border:0;color:inherit;padding:0;font-size:13px}
+  .filetree{white-space:pre-wrap;background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:15px 17px;font-family:var(--mono);font-size:13px;line-height:1.75;color:var(--ink-2);overflow:auto}
+  .filetree b{color:var(--ink)}
+
+  ol.steps{list-style:none;margin:18px 0 0;padding:0;counter-reset:s}
+  ol.steps > li{counter-increment:s;position:relative;padding:0 0 22px 52px;margin:0}
+  ol.steps > li::before{content:counter(s);position:absolute;left:0;top:0;width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--navy),#0d3b6e);color:#fff;display:grid;place-items:center;font-weight:800;font-size:14px}
+  ol.steps > li::after{content:"";position:absolute;left:15.5px;top:36px;bottom:4px;width:1px;background:var(--line)}
+  ol.steps > li:last-child::after{display:none}
+  ol.steps > li > b:first-child{display:block;font-size:16px;margin-bottom:2px}
+  ol.steps .path{color:var(--muted);font-size:13px;font-family:var(--mono)}
+
+  .svgbox{border:1px solid var(--line);border-radius:14px;background:#fff;padding:12px;margin:18px 0;overflow:auto}
+  .svgbox svg{display:block;width:100%;height:auto}
+  .caption{font-size:12.5px;color:var(--muted);text-align:center;margin:6px 0 0}
+
+  .faq details{border:1px solid var(--line);border-radius:12px;padding:0 16px;margin:10px 0;background:#fff}
+  .faq details[open]{background:#fbfdff}
+  .faq summary{cursor:pointer;font-weight:700;font-size:14.8px;padding:14px 0;list-style:none}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::before{content:"+";display:inline-block;width:20px;color:var(--accent-d);font-weight:800}
+  .faq details[open] summary::before{content:"–"}
+  .faq .a{padding:0 0 14px 20px;color:var(--ink-2);font-size:14.6px}
+
+  .tag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:6px}
+  .tag.pro{background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe}
+  .tag.free{background:#eefaf0;color:#166534;border:1px solid #ccefd3}
+  .tag.tb{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}
+
+  footer.doc{border-top:1px solid var(--line);margin-top:56px;padding-top:22px;color:var(--muted);font-size:13.4px}
+
+  @media print{
+    nav.side,.topbar,.menu-btn{display:none !important}
+    main{padding:0;max-width:none}
+    .hero{border:0;background:#fff}
+    h2{page-break-after:avoid}
+    table,pre,.card,.svgbox{page-break-inside:avoid}
+    a{color:inherit;text-decoration:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="side" id="side">
+  <div class="brand">
+    <span class="dot">SN</span>
+    <span><b>State News</b><small>Elementor Kit Docs</small></span>
+  </div>
+  <span class="ver">Version 1.0 · Kit v2.0</span>
+  <ol>
+    <div class="grp">Start here</div>
+    <li><a class="navlink" href="#overview">1 · Overview</a></li>
+    <li><a class="navlink" href="#download">2 · What is in the download</a></li>
+    <li><a class="navlink" href="#requirements">3 · Requirements &amp; compatibility</a></li>
+    <li><a class="navlink" href="#prepare">4 · Before you start</a></li>
+    <li><a class="navlink" href="#install">5 · Step-by-step installation</a></li>
+    <div class="grp">The kit</div>
+    <li><a class="navlink" href="#imports">6 · What the kit imports</a></li>
+    <li><a class="navlink" href="#structure">7 · Site structure &amp; anatomy</a></li>
+    <li><a class="navlink" href="#pro">8 · Elementor Pro features used</a></li>
+    <div class="grp">Make it yours</div>
+    <li><a class="navlink" href="#customize">9 · Customization cookbook</a></li>
+    <li><a class="navlink" href="#ticker">10 · News ticker shortcode</a></li>
+    <li><a class="navlink" href="#plugins">11 · Bundled plugins</a></li>
+    <li><a class="navlink" href="#content">12 · Managing demo content</a></li>
+    <div class="grp">Ship it</div>
+    <li><a class="navlink" href="#perf">13 · Performance &amp; SEO checklist</a></li>
+    <li><a class="navlink" href="#faq">14 · Troubleshooting &amp; FAQ</a></li>
+    <li><a class="navlink" href="#appendix">15 · Appendix &amp; snippets</a></li>
+    <li><a class="navlink" href="#support">16 · Changelog &amp; support</a></li>
+  </ol>
+  <div class="hint">Print this page (Ctrl/Cmd + P) to get a clean PDF copy — the sidebar and toolbar are hidden automatically.</div>
+</nav>
+
+<main>
+  <div class="topbar">
+    <button class="menu-btn" id="menuBtn">☰ Contents</button>
+    <div class="crumb"><b>State News</b> · Elementor Kit Documentation</div>
+    <span class="spacer"></span>
+    <span class="pill">Kit v2.0 · Docs v1.0</span>
+  </div>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="eyebrow">WordPress · Elementor Pro · News &amp; Magazine</div>
+    <h1>State News — Elementor Kit Documentation</h1>
+    <p class="lead">Complete setup and customization guide for the State News kit: a regional / state-level news portal design with a live clock header, Hindi news ticker, category-wise loop grids, load-more blocks, ad slots, a search popup and a fixed “join us on WhatsApp” button. Everything is built in Elementor — no coding required.</p>
+    <div class="chips">
+      <span class="chip ok">✔ Elementor Pro kit</span>
+      <span class="chip ok">✔ 14 templates</span>
+      <span class="chip ok">✔ 20 demo posts</span>
+      <span class="chip">Hello Elementor 3.4.4</span>
+      <span class="chip">Elementor 3.30.3+</span>
+      <span class="chip">Elementor Pro 3.29.2 / 4.3.1</span>
+      <span class="chip">PHP 7.4+</span>
+    </div>
+  </section>
+
+  <!-- ============ 1 OVERVIEW ============ -->
+  <h2 id="overview"><span class="num">1</span>Overview</h2>
+  <p class="sub">What this kit is, who it is for, and how it is built.</p>
+
+  <p><b>State News</b> is a complete Elementor Pro <b>website kit</b> for state-level and local news portals, district update sites, YouTube news channels and small newsrooms. You do not build page by page — you import one ZIP file and the design, the demo posts, the menus and the Theme Builder layouts (header, footer, single post, archive, 404, search popup) all arrive ready.</p>
+
+  <div class="grid g3">
+    <div class="card">
+      <div class="kpi">14<small>templates</small></div>
+      <p style="margin:6px 0 0;color:var(--muted);font-size:13.5px">1 header · 1 footer · 1 single post · 1 archive · 1 404 · 1 search popup · 8 loop items</p>
+    </div>
+    <div class="card">
+      <div class="kpi">20<small>demo posts</small></div>
+      <p style="margin:6px 0 0;color:var(--muted);font-size:13.5px">Hindi news sample content, categories, featured images and 3 ready menus</p>
+    </div>
+    <div class="card">
+      <div class="kpi">0<small>lines of code</small></div>
+      <p style="margin:6px 0 0;color:var(--muted);font-size:13.5px">Every block is a normal Elementor widget — drag, edit, save</p>
+    </div>
+  </div>
+
+  <h3>Hinglish quick start (2 minute)</h3>
+  <div class="tip">
+    Hello Elementor theme install karein → Elementor + Elementor Pro install karein → PJ News Ticker aur GTranslate plugin install karein → <code>Elementor → Tools → Import / Export → Import Kit</code> me <b>State news kit.zip</b> upload karein → import ke baad homepage kholein. Logo aur colours <code>Site Settings</code> se badal dein. Detail steps section 5 me hain.
+  </div>
+
+  <h3>Design at a glance</h3>
+  <ul>
+    <li><b>Header</b> — top strip with a <b>live date + clock</b> (JavaScript clock, updates every second), “follow us” text and social icons; main row with logo, main menu, YouTube and e-paper buttons; a second menu row below the header.</li>
+    <li><b>Home</b> — Hindi news ticker, then category-wise news sections (आज की ताजा ख़बर, टॉप 10 ख़बरें, मनोरंजन, राजनीति, मध्यप्रदेश, राज्य, टॉप 3 ख़बरें…) built with <b>Loop Grid</b> widgets, plus dedicated <b>ad slots</b>.</li>
+    <li><b>Single post</b> — title, author/date/time meta, featured image, content, share buttons, post navigation, “must read” sidebar, related posts and a WhatsApp “join us” button.</li>
+    <li><b>Archive &amp; search</b> — full-width card grid with archive title; <b>404</b> page and a <b>search popup</b> with live results.</li>
+    <li><b>Footer</b> — icon menu (home, trending, location, videos, tv), GTranslate language switcher, back-to-top and copyright bar.</li>
+  </ul>
+
+  <!-- ============ 2 DOWNLOAD ============ -->
+  <h2 id="download"><span class="num">2</span>What is in the download</h2>
+  <p class="sub">Every file you received, and what it is used for.</p>
+
+  <div class="filetree">
+<b>State_News_Main-Files/</b>
+├── <b>State news wordpress theme/</b>
+│   ├── State news kit.zip              ← <b>the kit</b> (import this in Elementor)
+│   ├── hello-elementor.3.4.4.zip       ← free theme, install first
+│   ├── required plugin to install/
+│   │   ├── pj-news-ticker.zip          ← marquee news ticker shortcode
+│   │   └── gtranslate.3.0.9.zip        ← language switcher
+│   └── how to apply.txt                ← short 5-step note
+├── Documentation/index.html            ← original quick guide (this file replaces it)
+├── elementor-pro.zip                   ← Elementor Pro plugin (v4.3.1)
+├── README.txt
+├── CHANGELOG.txt
+└── LICENSE.txt
+  </div>
+
+  <table>
+    <thead><tr><th>File</th><th>Type</th><th>Where to use it</th><th>Required?</th></tr></thead>
+    <tbody>
+      <tr><td><code>State news kit.zip</code></td><td>Elementor kit</td><td>Elementor → Tools → Import / Export → Import Kit</td><td><span class="tag free">Yes</span></td></tr>
+      <tr><td><code>hello-elementor.3.4.4.zip</code></td><td>Theme</td><td>Appearance → Themes → Add New → Upload Theme</td><td><span class="tag free">Yes</span></td></tr>
+      <tr><td><code>elementor-pro.zip</code></td><td>Plugin</td><td>Plugins → Add New → Upload Plugin</td><td><span class="tag pro">Yes (Pro)</span></td></tr>
+      <tr><td><code>pj-news-ticker.zip</code></td><td>Plugin (free, GPL)</td><td>Plugins → Add New → Upload Plugin</td><td><span class="tag free">Yes</span></td></tr>
+      <tr><td><code>gtranslate.3.0.9.zip</code></td><td>Plugin (free)</td><td>Plugins → Add New → Upload Plugin</td><td>Recommended</td></tr>
+      <tr><td>Elementor (free)</td><td>Plugin</td><td>Plugins → Add New → search “Elementor”</td><td><span class="tag free">Yes</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="warn"><b>Elementor Pro is licensed software.</b> It is included here as a convenience for your own site, but updates and support come from Elementor with an active license. Do not redistribute the Pro plugin to other people — activate it on your own domain and connect your license under <b>Elementor → License</b> (or Elementor → Settings → License) for updates.</div>
+
+  <!-- ============ 3 REQUIREMENTS ============ -->
+  <h2 id="requirements"><span class="num">3</span>Requirements &amp; compatibility</h2>
+  <p class="sub">Check these before importing — 90% of failed imports are a server limit, not the kit.</p>
+
+  <table>
+    <thead><tr><th>Item</th><th>Minimum</th><th>Recommended</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>WordPress</td><td>6.0</td><td>6.6 +</td><td>Works on latest WP releases</td></tr>
+      <tr><td>PHP</td><td>7.4</td><td>8.1 / 8.2</td><td>PHP 8.x is noticeably faster</td></tr>
+      <tr><td>Theme</td><td>Hello Elementor</td><td>Hello Elementor 3.4.4</td><td>Any Elementor-ready theme also works, but the kit is designed on Hello</td></tr>
+      <tr><td>Elementor (free)</td><td>3.30.3</td><td>latest 3.x / 4.x</td><td>Kit was exported with 3.30.3</td></tr>
+      <tr><td>Elementor Pro</td><td>3.29.2</td><td>4.3.1 (bundled)</td><td>Theme Builder, Loop Grid, Loop Carousel, Popup, Share Buttons need Pro</td></tr>
+      <tr><td>PHP memory limit</td><td>128 MB</td><td><b>256 MB</b></td><td>Below 256 MB the kit import can stop halfway</td></tr>
+      <tr><td>Max upload size</td><td>16 MB</td><td><b>64 MB</b></td><td>Needed for the kit ZIP and demo images</td></tr>
+      <tr><td>Max execution time</td><td>60 s</td><td>300 s</td><td>Server timeouts freeze the import progress bar</td></tr>
+      <tr><td>HTTPS</td><td>—</td><td>Yes</td><td>GTranslate and social embeds behave better on HTTPS</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Version pairing</h3>
+  <p>The kit was exported on <b>Elementor 3.30.3 + Elementor Pro 3.29.2</b>. The Pro ZIP bundled in this download is <b>4.3.1</b>, which requires a matching Elementor core (4.x). Both routes work:</p>
+  <ul>
+    <li><b>Fresh site (recommended):</b> install the latest Elementor free + the bundled Pro 4.3.1, then import the kit. Templates import cleanly on 4.x.</li>
+    <li><b>Existing site on Elementor 3.x:</b> keep your current Pro version and do <b>not</b> install Pro 4.3.1 until you also update Elementor core — mismatched core/Pro versions break the editor.</li>
+  </ul>
+  <div class="note">After the import, open <b>Elementor → Tools → Regenerate CSS &amp; Data</b> once. This rebuilds the stylesheet for the new global colours and typography and fixes “design looks slightly off” issues.</div>
+
+  <!-- ============ 4 PREPARE ============ -->
+  <h2 id="prepare"><span class="num">4</span>Before you start</h2>
+  <p class="sub">Five minutes of preparation saves an hour of troubleshooting.</p>
+
+  <ol class="steps">
+    <li><b>Take a backup</b> — database + <code>wp-content</code> (UpdraftPlus, All-in-One WP Migration or your host’s one-click backup). The kit import adds content; it never deletes your existing pages, but a backup is always cheaper than a repair.</li>
+    <li><b>Use a clean site if possible</b> — a new WordPress install with only Hello Elementor, Elementor, Elementor Pro and the two bundled plugins. Other page builders (WPBakery, Divi) and aggressive optimization plugins can interfere with the Elementor editor.</li>
+    <li><b>Raise the server limits</b> — ask your host for memory 256 MB, upload 64 MB, execution 300 s. On cPanel you can often do it yourself in <b>MultiPHP INI Editor</b>:
+      <pre><code>memory_limit = 256M
+upload_max_filesize = 64M
+post_max_size = 64M
+max_execution_time = 300</code></pre></li>
+    <li><b>Turn off caching/optimization plugins</b> while you import and design (LiteSpeed Cache, WP Rocket, Autoptimize, Cloudflare “Rocket Loader”). Re-enable them at the end and purge.</li>
+    <li><b>Keep Elementor in Safe Mode off</b> — if the editor already misbehaves, first check <b>Elementor → Tools → Safe Mode</b> to see whether a plugin is the cause.</li>
+  </ol>
+
+  <div class="tip"><b>Staging tip:</b> import on a sub-domain or staging copy first (e.g. <code>staging.yoursite.com</code>). When every section looks right, migrate to the live domain. Elementor stores absolute URLs in some widgets (logo links, ad images) — after migration run <b>Better Search Replace</b> or Elementor → Tools → <b>Replace URL</b>.</div>
+
+  <!-- ============ 5 INSTALL ============ -->
+  <h2 id="install"><span class="num">5</span>Step-by-step installation</h2>
+  <p class="sub">From a blank WordPress to a working State News site — about 15 minutes.</p>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 980 190" role="img" aria-label="Installation flow diagram">
+      <defs>
+        <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#001A39"/><stop offset="1" stop-color="#0d3b6e"/></linearGradient>
+        <marker id="arw" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/></marker>
+      </defs>
+      <g font-family="-apple-system,Segoe UI,Roboto,sans-serif">
+        <g>
+          <rect x="14" y="46" width="146" height="82" rx="12" fill="#f7f9fb" stroke="#e2e8f0"/>
+          <text x="87" y="78" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0e1726">1 · Theme</text>
+          <text x="87" y="98" text-anchor="middle" font-size="11" fill="#64748b">Hello Elementor</text>
+          <text x="87" y="114" text-anchor="middle" font-size="11" fill="#64748b">activate</text>
+        </g>
+        <line x1="162" y1="87" x2="186" y2="87" stroke="#94a3b8" stroke-width="2" marker-end="url(#arw)"/>
+        <g>
+          <rect x="188" y="46" width="146" height="82" rx="12" fill="#f7f9fb" stroke="#e2e8f0"/>
+          <text x="261" y="78" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0e1726">2 · Elementor</text>
+          <text x="261" y="98" text-anchor="middle" font-size="11" fill="#64748b">free from repo</text>
+          <text x="261" y="114" text-anchor="middle" font-size="11" fill="#64748b">+ Pro zip upload</text>
+        </g>
+        <line x1="336" y1="87" x2="360" y2="87" stroke="#94a3b8" stroke-width="2" marker-end="url(#arw)"/>
+        <g>
+          <rect x="362" y="46" width="146" height="82" rx="12" fill="#f7f9fb" stroke="#e2e8f0"/>
+          <text x="435" y="78" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0e1726">3 · Plugins</text>
+          <text x="435" y="98" text-anchor="middle" font-size="11" fill="#64748b">PJ News Ticker</text>
+          <text x="435" y="114" text-anchor="middle" font-size="11" fill="#64748b">GTranslate</text>
+        </g>
+        <line x1="510" y1="87" x2="534" y2="87" stroke="#94a3b8" stroke-width="2" marker-end="url(#arw)"/>
+        <g>
+          <rect x="536" y="38" width="160" height="98" rx="12" fill="url(#g1)"/>
+          <text x="616" y="72" text-anchor="middle" font-size="12.5" font-weight="700" fill="#ffffff">4 · Import kit</text>
+          <text x="616" y="92" text-anchor="middle" font-size="10.6" fill="#c7d2fe">Elementor → Tools →</text>
+          <text x="616" y="107" text-anchor="middle" font-size="10.6" fill="#c7d2fe">Import / Export →</text>
+          <text x="616" y="122" text-anchor="middle" font-size="10.6" fill="#c7d2fe">Import Kit</text>
+        </g>
+        <line x1="698" y1="87" x2="722" y2="87" stroke="#94a3b8" stroke-width="2" marker-end="url(#arw)"/>
+        <g>
+          <rect x="724" y="46" width="120" height="82" rx="12" fill="#eefaf0" stroke="#ccefd3"/>
+          <text x="784" y="78" text-anchor="middle" font-size="12.5" font-weight="700" fill="#14532d">5 · Verify</text>
+          <text x="784" y="98" text-anchor="middle" font-size="11" fill="#166534">Theme Builder</text>
+          <text x="784" y="114" text-anchor="middle" font-size="11" fill="#166534">+ menus</text>
+        </g>
+        <line x1="846" y1="87" x2="870" y2="87" stroke="#94a3b8" stroke-width="2" marker-end="url(#arw)"/>
+        <g>
+          <rect x="872" y="46" width="96" height="82" rx="12" fill="#eefaf0" stroke="#ccefd3"/>
+          <text x="920" y="78" text-anchor="middle" font-size="12.5" font-weight="700" fill="#14532d">6 · Brand</text>
+          <text x="920" y="98" text-anchor="middle" font-size="11" fill="#166534">logo, colours,</text>
+          <text x="920" y="114" text-anchor="middle" font-size="11" fill="#166534">fonts</text>
+        </g>
+      </g>
+    </svg>
+    <p class="caption">Installation order — theme first, plugins second, kit last. Do not skip step 3: without the ticker plugin the Hindi ticker bar stays empty.</p>
+  </div>
+
+  <ol class="steps">
+    <li><b>Install and activate Hello Elementor</b>
+      <div class="path">Appearance → Themes → Add New → Upload Theme → <code>hello-elementor.3.4.4.zip</code> → Install → Activate</div>
+      Any Elementor-ready theme works, but the kit’s header/footer are built with Hello’s canvas in mind — use Hello to get the same result as the preview.</li>
+
+    <li><b>Install Elementor (free)</b>
+      <div class="path">Plugins → Add New → search “Elementor Website Builder” → Install → Activate</div>
+      Skip Elementor’s onboarding wizard (close it) — the kit brings its own settings.</li>
+
+    <li><b>Install Elementor Pro</b>
+      <div class="path">Plugins → Add New → Upload Plugin → <code>elementor-pro.zip</code> → Install → Activate</div>
+      Then open <b>Elementor → License</b> and connect/activate your license if you have one, so Pro updates and the template library work.</li>
+
+    <li><b>Install the two required plugins</b>
+      <div class="path">Plugins → Add New → Upload Plugin → <code>pj-news-ticker.zip</code> → Activate<br>Plugins → Add New → Upload Plugin → <code>gtranslate.3.0.9.zip</code> → Activate</div>
+      <b>PJ News Ticker</b> powers the scrolling Hindi headline bar on the homepage. <b>GTranslate</b> powers the language dropdown in the footer. Without them you will see an empty ticker and an empty footer slot — both are shortcodes, so nothing breaks, it just stays blank.</li>
+
+    <li><b>Import the kit</b>
+      <div class="path">Elementor → Tools → Import / Export → “Import Kit” tab → Choose file → <code>State news kit.zip</code> → Import</div>
+      When the progress screen appears, leave all three checkboxes ticked:
+      <ul>
+        <li><b>Site Settings</b> — global colours, typography, layout, Hello header/footer behaviour</li>
+        <li><b>Templates</b> — header, footer, single post, archive, 404, search popup, 8 loop items</li>
+        <li><b>Content</b> — homepage, 20 demo posts, 3 menus, 9 categories</li>
+      </ul>
+      Click <b>Next → Import</b> and wait. A 20-post kit usually finishes in 30–90 seconds. Do not close the tab — if the browser tab sleeps, the import can stop halfway.</li>
+
+    <li><b>Verify the Theme Builder conditions</b>
+      <div class="path">Templates → Theme Builder</div>
+      You should see <b>Header</b>, <b>Footer</b>, <b>Single Post</b>, <b>Archive</b>, <b>404</b> and the <b>Search</b> popup already listed with their conditions (section 6 lists them all). If a template shows “No condition”, open it → <b>Settings</b> → add the condition from the table.</li>
+
+    <li><b>Check the homepage and menus</b>
+      <div class="path">Settings → Reading → “Your homepage displays” = A static page → Home</div>
+      Then <b>Appearance → Menus</b> and confirm the three menus are assigned: <b>Main menu</b>, <b>Hdr</b> and <b>Below 👇 header Menu</b>. (The header template has two Nav Menu widgets, one per location.)</li>
+
+    <li><b>Make it yours</b>
+      Logo, colours, fonts, ticker text, ad banners, WhatsApp link and the copyright line — all covered in section 9. Finally: <b>Elementor → Tools → Regenerate CSS &amp; Data</b>, then purge your cache.</li>
+  </ol>
+
+  <div class="warn"><b>The “import stops at 60%” problem.</b> If the progress bar freezes, refresh the page and check what actually arrived (Elements → Templates). Then fix the limits from section 4 and run the import again — a second import is safe: existing templates are overwritten by ID, not duplicated. On very low-budget hosting, import on a local install (LocalWP / XAMPP) and migrate the finished site instead.</div>
+
+  <!-- ============ 6 IMPORTS ============ -->
+  <h2 id="imports"><span class="num">6</span>What the kit imports</h2>
+  <p class="sub">A precise inventory — use it to verify a successful import.</p>
+
+  <h3>6.1 · Templates (14)</h3>
+  <table>
+    <thead><tr><th>#</th><th>Template</th><th>Type</th><th>Condition / location</th><th>What it controls</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><b>Header</b></td><td><span class="tag tb">Theme Builder</span> header</td><td>Entire site</td><td>Live clock strip, social icons, logo, main menu, YouTube + e-paper buttons, second menu row</td></tr>
+      <tr><td>2</td><td><b>FOOTER</b></td><td><span class="tag tb">Theme Builder</span> footer</td><td>Entire site</td><td>Icon quick-links, GTranslate switcher, back-to-top, copyright bar</td></tr>
+      <tr><td>3</td><td><b>Single Post lage layout</b></td><td><span class="tag tb">Theme Builder</span> single post</td><td>All singular posts</td><td>Title, meta, featured image, content, share buttons, related posts, sidebar blocks</td></tr>
+      <tr><td>4</td><td><b>Archives and search page</b></td><td><span class="tag tb">Theme Builder</span> archive</td><td>All archives + search results</td><td>Archive title + full-width card grid</td></tr>
+      <tr><td>5</td><td><b>404 page look</b></td><td><span class="tag tb">Theme Builder</span> 404</td><td>404 not found</td><td>“Page not found” message, image, “Go to home” button</td></tr>
+      <tr><td>6</td><td><b>Search</b></td><td><span class="tag pro">Popup</span></td><td>Popup (opens from header search icon)</td><td>Live search field, “start typing…” hint</td></tr>
+      <tr><td>7</td><td><b>card</b></td><td>Loop item</td><td>Used inside loop grids</td><td>Standard news card (image, category label, title, meta)</td></tr>
+      <tr><td>8</td><td><b>latest</b></td><td>Loop item</td><td>Used inside loop grids</td><td>“Latest” style card for the top block</td></tr>
+      <tr><td>9</td><td><b>story</b></td><td>Loop item</td><td>Used inside loop grids</td><td>Wide story card (image left, text right)</td></tr>
+      <tr><td>10</td><td><b>thumb t list</b></td><td>Loop item</td><td>Used inside loop grids</td><td>Thumbnail + text list row</td></tr>
+      <tr><td>11</td><td><b>Simple grid</b></td><td>Loop item</td><td>Used inside loop grids</td><td>Image-over-title grid card</td></tr>
+      <tr><td>12</td><td><b>POST TITLE ONLY</b></td><td>Loop item</td><td>Used inside loop grids</td><td>Compact headline list (no images) for sidebars</td></tr>
+      <tr><td>13</td><td><b>MUST READ SIDEBAR</b></td><td>Loop item</td><td>Used inside loop grids</td><td>“Must read” sidebar list styling</td></tr>
+      <tr><td>14</td><td><b>Archives loop</b></td><td>Loop item</td><td>Used by archive template</td><td>Archive card with full-width thumbnail</td></tr>
+    </tbody>
+  </table>
+
+  <h3>6.2 · Content</h3>
+  <table>
+    <thead><tr><th>Content</th><th>Quantity</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Posts</td><td>20</td><td>Hindi demo news stories with categories and featured images — safe to delete</td></tr>
+      <tr><td>Pages</td><td>1 (<b>Home</b>)</td><td>Set as the front page by the kit; it holds every homepage section</td></tr>
+      <tr><td>Menus</td><td>3</td><td><code>Main menu</code>, <code>Hdr</code>, <code>Below 👇 header Menu</code></td></tr>
+      <tr><td>Categories</td><td>9</td><td>News, Latest news, Locals, Sports, Phones, Space, Ai, 5g, label2 (rename them to your districts/sections)</td></tr>
+      <tr><td>Site settings</td><td>1 set</td><td>Global colours, typography, layout and page-transition settings</td></tr>
+    </tbody>
+  </table>
+
+  <h3>6.3 · Global design tokens</h3>
+  <p>The kit ships these colours under <b>Site Settings → Global Colors</b>. Edit them once and the whole site follows — that is the fastest way to rebrand.</p>
+  <table>
+    <thead><tr><th>Token</th><th>Hex</th><th>Typical use in this kit</th></tr></thead>
+    <tbody>
+      <tr><td><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#222222;vertical-align:-1px;margin-right:6px"></span><b>Primary</b></td><td><code>#222222</code></td><td>Headings, ticker text, dark accents</td></tr>
+      <tr><td><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#001A39;vertical-align:-1px;margin-right:6px"></span><b>Secondary</b></td><td><code>#001A39</code></td><td>Header/footer background, buttons</td></tr>
+      <tr><td><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#333333;vertical-align:-1px;margin-right:6px"></span><b>Text</b></td><td><code>#333333</code></td><td>Body copy</td></tr>
+      <tr><td><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#12BF2A;vertical-align:-1px;margin-right:6px"></span><b>Accent</b></td><td><code>#12BF2A</code></td><td>Labels, hover states, “join us” button</td></tr>
+      <tr><td><b>meta</b> (custom)</td><td><code>#888888</code></td><td>Date, author, small meta text</td></tr>
+      <tr><td><b>red</b> (custom)</td><td><code>#DD3333</code></td><td>Breaking-news labels, ticker highlight</td></tr>
+      <tr><td><b>asst</b> (custom)</td><td><code>#51A1D6</code></td><td>Secondary accent, links in body</td></tr>
+    </tbody>
+  </table>
+  <p>Typography shipped with the kit: <b>Primary</b> 22 px / 700, <b>Secondary</b> 14 px / 700, <b>Text</b> 16 px / 400, plus a 600-weight accent style. Body, H1–H6 sizes and mobile variants are all defined — adjust them in <b>Site Settings → Global Fonts</b>.</p>
+
+  <!-- ============ 7 STRUCTURE ============ -->
+  <h2 id="structure"><span class="num">7</span>Site structure &amp; anatomy</h2>
+  <p class="sub">Know where each part lives before you start editing.</p>
+
+  <h3>7.1 · Header anatomy</h3>
+  <div class="svgbox">
+    <svg viewBox="0 0 980 250" role="img" aria-label="Header anatomy diagram">
+      <g font-family="-apple-system,Segoe UI,Roboto,sans-serif">
+        <!-- top strip -->
+        <rect x="20" y="18" width="940" height="40" rx="8" fill="#001A39"/>
+        <text x="36" y="43" font-size="12" fill="#c7d2fe">Today: Mon, Oct 31, 2026, 10:42:11 AM</text>
+        <rect x="640" y="30" width="60" height="16" rx="8" fill="#0d3b6e"/>
+        <text x="670" y="42" font-size="9.5" fill="#c7d2fe" text-anchor="middle">follow us</text>
+        <g fill="#93c5fd"><circle cx="726" cy="38" r="7"/><circle cx="748" cy="38" r="7"/><circle cx="770" cy="38" r="7"/><circle cx="792" cy="38" r="7"/><text x="726" y="41" font-size="7" text-anchor="middle" fill="#001A39" font-weight="700">f</text><text x="748" y="41" font-size="7" text-anchor="middle" fill="#001A39" font-weight="700">x</text><text x="770" y="41" font-size="7" text-anchor="middle" fill="#001A39" font-weight="700">in</text><text x="792" y="41" font-size="7" text-anchor="middle" fill="#001A39" font-weight="700">yt</text></g>
+        <line x1="20" y1="58" x2="960" y2="58" stroke="#1e3a5f"/>
+        <!-- main row -->
+        <rect x="20" y="58" width="940" height="86" fill="#ffffff" stroke="#e2e8f0"/>
+        <rect x="40" y="76" width="126" height="50" rx="8" fill="#f1f5f9" stroke="#cbd5e1" stroke-dasharray="4 3"/>
+        <text x="103" y="106" font-size="10.5" fill="#64748b" text-anchor="middle">site logo</text>
+        <g font-size="11.5" fill="#0e1726" font-weight="600">
+          <text x="330" y="105">Home</text><text x="382" y="105">राज्य</text><text x="434" y="105">मनोरंजन</text><text x="512" y="105">खेल</text><text x="556" y="105">टेक</text>
+        </g>
+        <rect x="700" y="88" width="104" height="26" rx="13" fill="#fee2e2"/><text x="752" y="105" font-size="10.5" fill="#b91c1c" text-anchor="middle" font-weight="700">▶ YouTube</text>
+        <rect x="814" y="88" width="104" height="26" rx="13" fill="#e0f2fe"/><text x="866" y="105" font-size="10.5" fill="#0369a1" text-anchor="middle" font-weight="700">e-paper</text>
+        <rect x="928" y="88" width="24" height="24" rx="12" fill="#f1f5f9" stroke="#cbd5e1"/><text x="940" y="104" font-size="11" text-anchor="middle">🔍</text>
+        <!-- second menu row -->
+        <rect x="20" y="144" width="940" height="34" fill="#0b2545"/>
+        <g font-size="10.5" fill="#c7d2fe"><text x="40" y="166">आज की ताज़ा ख़बर</text><text x="150" y="166">टॉप 10 ख़बरें</text><text x="248" y="166">मध्यप्रदेश</text><text x="330" y="166">राजनीति</text><text x="396" y="166">बिज़नेस</text><text x="462" y="166">खेल</text></g>
+        <!-- annotations -->
+        <g font-size="10.5" fill="#64748b">
+          <text x="20" y="200">① Top strip — Html widget (live date/time script) + heading + Social Icons</text>
+          <text x="20" y="218">② Main row — Site Logo widget · Nav Menu (“main-menu”) · two Icon Box buttons · search icon (opens Popup)</text>
+          <text x="20" y="236">③ Second row — Nav Menu (“Below 👇 header Menu”) for district/category links</text>
+        </g>
+      </g>
+    </svg>
+    <p class="caption">Header template (id 8) — everything is editable from Templates → Theme Builder → Header → Edit with Elementor.</p>
+  </div>
+
+  <h3>7.2 · Homepage section order</h3>
+  <p>The <b>Home</b> page (imported and set as the front page) is a stack of sections. Each news block is a <b>Loop Grid</b> pointing at one or more categories:</p>
+  <table>
+    <thead><tr><th>#</th><th>Section heading</th><th>Block</th><th>Default grid</th></tr></thead>
+    <tbody>
+      <tr><td>0</td><td><i>Hindi headline bar</i></td><td>Shortcode <code>[pj-news-ticker]</code></td><td>Marquee, latest 5 posts</td></tr>
+      <tr><td>1</td><td>आज की ताजा ख़बर</td><td>Loop Grid + “latest” card</td><td>1 col / 1 col tablet</td></tr>
+      <tr><td>2</td><td>टॉप 10 ख़बरें</td><td>Loop Grid</td><td>2 cols</td></tr>
+      <tr><td>3</td><td>मनोरंजन</td><td>Loop Grid + thumbnail list</td><td>1 col + 2 cols</td></tr>
+      <tr><td>4</td><td>राजनीति</td><td>Loop Grid</td><td>2 cols</td></tr>
+      <tr><td>5</td><td>टॉप 10 ख़बरें</td><td>Loop Grid</td><td>4 cols / 3 tablet / 2 mobile</td></tr>
+      <tr><td>6</td><td><b>ads</b></td><td>Ad slot (image / HTML)</td><td>Banner row</td></tr>
+      <tr><td>7</td><td>मध्यप्रदेश</td><td>Loop Grid + simple grid</td><td>1 col + 3 cols</td></tr>
+      <tr><td>8</td><td>टॉप 10 ख़बरें</td><td>Loop Grid + “story” card</td><td>1 col / 2 cols</td></tr>
+      <tr><td>9</td><td>टॉप 10 ख़बरें</td><td>Loop Carousel</td><td>Sliding row</td></tr>
+      <tr><td>10</td><td>टॉप 3 ख़बरें</td><td>Loop Grid</td><td>1 col</td></tr>
+      <tr><td>11</td><td>राज्य</td><td>Loop Grid</td><td>2 cols</td></tr>
+      <tr><td>12</td><td>मध्यप्रदेश</td><td>Loop Grid</td><td>2 cols</td></tr>
+      <tr><td>13</td><td>टॉप 10 ख़बरें</td><td>Loop Carousel</td><td>Sliding row</td></tr>
+      <tr><td>14</td><td><b>ads</b></td><td>Ad slot</td><td>Banner row</td></tr>
+      <tr><td>15</td><td>टॉप 10 ख़बरें</td><td>Loop Grid</td><td>2 cols</td></tr>
+    </tbody>
+  </table>
+  <div class="note">Section headings in the demo are Hindi. To change them you don’t have to hunt: open the homepage in Elementor, click any heading, and use the <b>Navigator</b> (top-left icon) to jump from block to block.</div>
+
+  <h3>7.3 · Single post layout</h3>
+  <p>The single-post template uses Theme Builder widgets, so the design follows every future article automatically:</p>
+  <div class="grid g2">
+    <div class="card">
+      <h4>Main column</h4>
+      <ul style="margin-bottom:0">
+        <li><b>Post Title</b></li>
+        <li><b>Post Info</b> — author, date, category, reading time</li>
+        <li><b>Featured Image</b></li>
+        <li><b>Post Content</b></li>
+        <li><b>Share Buttons</b> — Facebook, X/Twitter, WhatsApp, Telegram, copy link</li>
+        <li><b>Post Navigation</b> — previous / next article</li>
+        <li><b>Related posts</b> → Loop Grid</li>
+        <li><b>“join us” button</b> — WhatsApp group link</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Sidebar column</h4>
+      <ul style="margin-bottom:0">
+        <li><b>must read</b> heading + Loop Grid (MUST READ SIDEBAR loop item)</li>
+        <li><b>Ad slot</b> (the demo shows an “Election ad” image — replace it)</li>
+        <li><b>Post Info</b> variant (clock icon — date/time)</li>
+        <li>Optional: categories widget, tag cloud</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>7.4 · Archive, 404, search and footer</h3>
+  <ul>
+    <li><b>Archives and search page</b> — archive title + responsive loop grid, used for categories, tags, author, date and search results.</li>
+    <li><b>404 page look</b> — friendly message, image and a “Go to home” button.</li>
+    <li><b>Search popup</b> — a real Elementor Pro popup opened by the header search icon; it searches posts live as the visitor types.</li>
+    <li><b>Footer</b> — 6 icon boxes (home, trending, location, videos, tv, top), the <code>[gtranslate]</code> switcher and the copyright heading. Edit the copyright text in <b>Site Settings → Settings → Footer copyright</b> or directly in the footer template.</li>
+  </ul>
+
+  <!-- ============ 8 PRO ============ -->
+  <h2 id="pro"><span class="num">8</span>Elementor Pro features used</h2>
+  <p class="sub">What needs Pro — and what each widget does here.</p>
+
+  <table>
+    <thead><tr><th>Elementor feature</th><th>Where it appears</th><th>Why it matters to you</th></tr></thead>
+    <tbody>
+      <tr><td><b>Theme Builder</b> <span class="tag tb">Pro</span></td><td>Header, Footer, Single Post, Archive, 404</td><td>Design once, apply to every page/post. Change the header and all 20 posts update instantly.</td></tr>
+      <tr><td><b>Loop Grid</b> <span class="tag pro">Pro</span></td><td>13 grids on the homepage + related posts + sidebar</td><td>Pull posts by category, choose a loop-item design (card / story / list), set columns per device and a <b>Load More</b> button.</td></tr>
+      <tr><td><b>Loop Carousel</b> <span class="tag pro">Pro</span></td><td>2 sliding rows on the homepage</td><td>Infinite sliding headline rows — good for “टॉप 10 ख़बरें” style blocks.</td></tr>
+      <tr><td><b>Popup</b> <span class="tag pro">Pro</span></td><td>Search popup</td><td>Overlay search with live results; triggered from the header icon, no page reload.</td></tr>
+      <tr><td><b>Nav Menu</b> <span class="tag pro">Pro</span></td><td>Header (2 places)</td><td>Drop-down menus, mobile toggle, and per-menu styling. Works with the kit’s two menu locations.</td></tr>
+      <tr><td><b>Post Info / Post Title / Featured Image / Post Content</b> <span class="tag tb">Pro</span></td><td>Single post template</td><td>Dynamic — they read from the current post, so no manual editing per article.</td></tr>
+      <tr><td><b>Share Buttons</b> <span class="tag pro">Pro</span></td><td>Single post (top &amp; bottom)</td><td>Facebook, X, WhatsApp, Telegram, LinkedIn, Pinterest, e-mail, copy link.</td></tr>
+      <tr><td><b>Post Navigation</b> <span class="tag pro">Pro</span></td><td>Below article</td><td>Previous / next story links — keeps readers on the site.</td></tr>
+      <tr><td><b>Site Logo</b> <span class="tag free">Free</span></td><td>Header</td><td>Reads the logo from <b>Site Settings → Site Identity</b>.</td></tr>
+      <tr><td><b>Shortcode</b> <span class="tag free">Free</span></td><td>Ticker + footer</td><td>Runs <code>[pj-news-ticker]</code> and <code>[gtranslate]</code>.</td></tr>
+      <tr><td><b>HTML</b> <span class="tag free">Free</span></td><td>Header top strip</td><td>The live clock: a small <code>&lt;script&gt;</code> that refreshes the date/time every second.</td></tr>
+      <tr><td><b>Icon Box / Social Icons / Button</b> <span class="tag free">Free</span></td><td>Header, footer, post</td><td>YouTube, e-paper, WhatsApp, quick links, back-to-top.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="warn">If a loop grid looks empty or the editor shows <b>“This widget requires Elementor Pro”</b>, the Pro plugin is missing or not active. Theme Builder templates and loop widgets are Pro-only — the free Elementor version cannot render them.</div>
+
+  <!-- ============ 9 CUSTOMIZE ============ -->
+  <h2 id="customize"><span class="num">9</span>Customization cookbook</h2>
+  <p class="sub">Twelve common changes, each with the exact path and settings.</p>
+
+  <h3>9.1 · Logo</h3>
+  <p><b>Site Settings</b> (top-left of the Elementor editor) <b>→ Site Identity → Site Logo</b> → upload your PNG/SVG → publish. Recommended size: <b>240 × 60 px</b> (transparent PNG, 2× for retina). The header uses the <b>Site Logo</b> widget, so the change applies everywhere at once.</p>
+
+  <h3>9.2 · Colours</h3>
+  <p><b>Site Settings → Global Colors</b>. Edit the four system colours (Primary <code>#222222</code>, Secondary <code>#001A39</code>, Text <code>#333333</code>, Accent <code>#12BF2A</code>) and the three custom ones (<code>meta</code> <code>#888888</code>, <code>red</code> <code>#DD3333</code>, <code>asst</code> <code>#51A1D6</code>). Every widget that uses a global colour updates instantly — no per-widget editing.</p>
+  <div class="tip">Keep the <b>red</b> token for breaking-news labels and the <b>Accent</b> for CTAs. If you change the Accent to your brand colour, the “join us” and ticker highlights follow automatically.</div>
+
+  <h3>9.3 · Fonts</h3>
+  <p><b>Site Settings → Global Fonts</b> → change Primary / Secondary / Text / Accent. For Hindi + English sites, a Devanagari-capable family (Noto Sans Devanagari, Mukta, Hind, Poppins + Noto) keeps headlines clean. Per-widget overrides live in <b>Style</b> tabs and always beat global styles.</p>
+
+  <h3>9.4 · Menus</h3>
+  <table>
+    <thead><tr><th>Menu</th><th>Location used by</th><th>What to put in it</th></tr></thead>
+    <tbody>
+      <tr><td><code>main-menu</code></td><td>Header main row (Nav Menu widget)</td><td>6–8 primary sections: Home, राज्य, देश, मनोरंजन, खेल, टेक, वीडियो</td></tr>
+      <tr><td><code>Below 👇 header Menu</code></td><td>Second header row</td><td>District / sub-category links — keep to one line</td></tr>
+      <tr><td><code>Hdr</code></td><td>Spare menu used during design</td><td>You can ignore or reuse it</td></tr>
+    </tbody>
+  </table>
+  <p>Edit at <b>Appearance → Menus</b>, then refresh the header canvas. To rename a location: header template → click the Nav Menu widget → <b>Content → Menu</b>.</p>
+
+  <h3>9.5 · Ad slots</h3>
+  <p>The kit has three monetization spots: two <b>“ads”</b> sections on the homepage (banner rows between news blocks) and one <b>sidebar ad</b> in the single-post template (the demo image is titled “Election ad”).</p>
+  <ol>
+    <li>Open the template/page in Elementor, click the ad <b>Image</b> widget.</li>
+    <li>Content → <b>Choose Image</b> → upload your banner, then <b>Link</b> → your advertiser URL (set <code>nofollow</code> if required).</li>
+    <li>Sizes that fit the layout: <b>728 × 90</b> or <b>970 × 250</b> for the homepage banners, <b>300 × 250</b> or <b>300 × 600</b> for the sidebar.</li>
+    <li>Selling ads through a network? Drop an <b>HTML widget</b> in place of the image and paste the network’s ad code (AdSense / Adsterra / Ezoic).</li>
+    <li>Not monetizing yet? Delete the image and the section collapses — or hide it while you build traffic.</li>
+  </ol>
+
+  <h3>9.6 · YouTube, e-paper and WhatsApp links</h3>
+  <p>All three are ordinary widgets — update the link and you’re done:</p>
+  <ul>
+    <li><b>YouTube button</b> — header template → Icon Box “YouTube” → Content → <b>Link</b> → <code>https://youtube.com/@yourchannel</code>.</li>
+    <li><b>e-paper button</b> — same widget type, link to your PDF flipbook or e-paper page.</li>
+    <li><b>WhatsApp button</b> — single-post template → Button “join us” → Link → <code>https://chat.whatsapp.com/XXXXXXXXXXX</code> (group) or <code>https://wa.me/91XXXXXXXXXX</code> (direct chat). Keep <b>target = _blank</b>.</li>
+    <li><b>Social icons</b> (header strip) — click the Social Icons widget → edit each item’s link and icon.</li>
+  </ul>
+
+  <h3>9.7 · Category sections (Loop Grid)</h3>
+  <p>Click any Loop Grid → <b>Content</b>:</p>
+  <ul>
+    <li><b>Query → Source:</b> Posts. <b>Include → By term:</b> pick your category (e.g. राज्य), then remove the demo category.</li>
+    <li><b>Layout:</b> Columns (per device), <b>Posts per page</b> (6–12 is a good homepage block).</li>
+    <li><b>Pagination:</b> Load More (recommended) · Numbers · Previous/Next · None.</li>
+    <li><b>Loop item:</b> the design of each card — switch between <b>card</b>, <b>story</b>, <b>thumb t list</b>, <b>Simple grid</b>, <b>POST TITLE ONLY</b>.</li>
+  </ul>
+  <div class="note"><b>Loop items are shared.</b> Editing “card” changes every grid using “card”. To restyle one section only, duplicate the loop item (Templates → Loop Items → <b>Duplicate</b>), rename it, and point that grid at the copy.</div>
+
+  <h3>9.8 · Header layout tweaks</h3>
+  <ul>
+    <li><b>Sticky header</b> — click the header container → <b>Advanced → Motion Effects → Sticky → Top</b> → set “Sticky on” = all devices. Add a white background + shadow in <b>Style</b> so text stays readable.</li>
+    <li><b>Hide the clock</b> — select the HTML widget → <b>Advanced → Responsive → Hide on…</b>, or delete the widget entirely.</li>
+    <li><b>Smaller header on mobile</b> — the Nav Menu widget has a mobile toggle; style it under <b>Style → Mobile Menu</b> (colour, width, icon).</li>
+  </ul>
+
+  <h3>9.9 · Footer</h3>
+  <ul>
+    <li><b>Quick links</b> — six Icon Boxes: home, trending, location, videos, tv, top. Change the label, icon (Font Awesome) and link.</li>
+    <li><b>Language switcher</b> — the <code>[gtranslate]</code> shortcode widget (see section 11).</li>
+    <li><b>Copyright</b> — heading widget “©️ 2024 Today’s Public…” → replace with your name and year, or set it once under <b>Site Settings → Settings → Footer copyright</b>.</li>
+    <li><b>Back to top</b> — the “Top” icon box links to <code>#</code>; keep it and add smooth scrolling with the CSS in section 15.</li>
+  </ul>
+
+  <h3>9.10 · Search popup</h3>
+  <p><b>Templates → Popup → Search → Edit with Elementor.</b> The popup contains a <b>Search</b> widget (post type: Post) and a hint heading. Under <b>Settings → Conditions</b> it should be triggered by the header icon; check the trigger under <b>Settings → Triggers</b> (click / on-page load). Style the overlay in <b>Style → Overlay</b>.</p>
+
+  <h3>9.11 · 404 page</h3>
+  <p><b>Templates → Theme Builder → 404 page look.</b> Edit the message, image and the “Go to home” button link. Condition should stay <i>404 page</i>.</p>
+
+  <h3>9.12 · Site icon, title and tagline</h3>
+  <p><b>Settings → General</b> for the site title/tagline (used in SEO titles), and <b>Site Settings → Site Identity → Site Icon</b> for the browser-tab favicon (512 × 512 px).</p>
+
+  <!-- ============ 10 TICKER ============ -->
+  <h2 id="ticker"><span class="num">10</span>News ticker shortcode</h2>
+  <p class="sub">The Hindi headline bar is powered by PJ News Ticker.</p>
+
+  <p>Default usage (what the kit puts at the top of the homepage):</p>
+  <pre><code>[pj-news-ticker]</code></pre>
+  <p>Customised — the most useful parameters:</p>
+  <pre><code>[pj-news-ticker
+  num_posts="6"
+  post_cat="rajya,desh"
+  show_label="true"
+  label_text="ताज़ा ख़बर"
+  label_bg_colour="#DD3333"
+  label_text_colour="#ffffff"
+  ticker_bg_colour="#ffffff"
+  speed="90"
+  size="16px"
+  target="_blank"
+  hide_if_empty="true"]</code></pre>
+
+  <table>
+    <thead><tr><th>Attribute</th><th>Default</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><code>num_posts</code></td><td>5</td><td>How many posts scroll (<code>-1</code> = all matching)</td></tr>
+      <tr><td><code>post_cat</code></td><td>0 (all)</td><td>Category <b>slugs</b>, comma-separated. Never point it at an empty category — the bar then shows nothing</td></tr>
+      <tr><td><code>show_label</code> / <code>label_text</code></td><td>true / “Latest Posts”</td><td>The fixed label chip before the scrolling text</td></tr>
+      <tr><td><code>label_bg_colour</code> / <code>label_text_colour</code></td><td>#1e73be / #ffffff</td><td>Label colours</td></tr>
+      <tr><td><code>ticker_bg_colour</code></td><td>#ffffff</td><td>Background of the scrolling strip</td></tr>
+      <tr><td><code>speed</code></td><td>100</td><td>Pixels per second (lower = slower)</td></tr>
+      <tr><td><code>size</code></td><td>100%</td><td>Font size in px / em / %</td></tr>
+      <tr><td><code>show_excerpt</code></td><td>false</td><td>Add a short excerpt after each headline</td></tr>
+      <tr><td><code>target</code></td><td>_self</td><td><code>_blank</code> opens the article in a new tab</td></tr>
+      <tr><td><code>gap</code></td><td>true</td><td>Gap between marquee cycles; <code>false</code> gives a continuous scroll</td></tr>
+      <tr><td><code>hide_if_empty</code></td><td>false</td><td>Hide the whole bar when no posts match</td></tr>
+      <tr><td><code>override_posts</code>, <code>override_posts_custom_text</code>, <code>…_url</code></td><td>false</td><td>Show your own fixed text (e.g. an announcement) instead of posts</td></tr>
+      <tr><td><code>custom_separator</code></td><td>—</td><td>HTML between headlines, e.g. <code>&lt;span&gt;•&lt;/span&gt;</code></td></tr>
+      <tr><td><code>google_font</code> / <code>google_font_url</code></td><td>—</td><td>Pick a Google font for the ticker text</td></tr>
+    </tbody>
+  </table>
+
+  <p>Global defaults live under <b>Settings → PJ News Ticker</b>. The shortcode attributes override them.</p>
+
+  <!-- ============ 11 PLUGINS ============ -->
+  <h2 id="plugins"><span class="num">11</span>Bundled plugins</h2>
+  <p class="sub">Two small plugins complete the design — here is what each one needs.</p>
+
+  <h3>11.1 · PJ News Ticker <span class="tag free">GPL</span></h3>
+  <ul>
+    <li><b>Install:</b> Plugins → Add New → Upload → <code>pj-news-ticker.zip</code> → Activate.</li>
+    <li><b>Settings:</b> <b>Settings → PJ News Ticker</b> for site-wide defaults.</li>
+    <li><b>Use:</b> shortcode anywhere — inside Elementor with a <b>Shortcode widget</b>, in a Text widget, or in a template.</li>
+    <li><b>Troubleshooting:</b> empty bar → the category slug in <code>post_cat</code> has no posts, or you have fewer posts than <code>num_posts</code>.</li>
+  </ul>
+
+  <h3>11.2 · GTranslate <span class="tag free">Free tier + paid cloud</span></h3>
+  <ul>
+    <li><b>Install:</b> Plugins → Add New → Upload → <code>gtranslate.3.0.9.zip</code> → Activate.</li>
+    <li><b>Where it appears:</b> the footer of the kit uses the <b>shortcode widget</b> with <code>[gtranslate]</code> — so the switcher shows in the footer without touching a widget area.</li>
+    <li><b>Configure:</b> <b>Settings → GTranslate</b> → choose the widget look (dropdown / flags / floating), the languages you need, and whether translation is free (Google’s auto translate) or the paid cloud version (better SEO, separate indexed URLs).</li>
+    <li><b>Manual text:</b> for a Hindi-first site, type your headlines in Hindi and offer English (and other languages) through GTranslate; machine translation is good enough for headlines and improves with the paid tier.</li>
+  </ul>
+  <div class="note">GTranslate injects its script from Google’s servers. If your site is behind a strict Content-Security-Policy or an aggressive script-blocker, allow <code>translate.google.com</code> / <code>cdn.gtranslate.net</code> or the switcher will stay invisible.</div>
+
+  <!-- ============ 12 CONTENT ============ -->
+  <h2 id="content"><span class="num">12</span>Managing demo content</h2>
+  <p class="sub">Turning the demo into a real news site.</p>
+
+  <ol class="steps">
+    <li><b>Rename categories first</b> — <b>Posts → Categories</b>. Replace demo names (News, 5g, Ai, Space, label2…) with your real sections (राज्य, देश, मनोरंजन, खेल…). Slugs matter if you use the ticker’s <code>post_cat</code>. Then update each homepage Loop Grid’s query to the new category.</li>
+    <li><b>Write 3–5 real posts before deleting the demo</b> — layout gaps look worse than placeholder text. Publish into the right categories so every section stays filled.</li>
+    <li><b>Delete the demo posts</b> — Posts → tick <b>Select All</b> (they all start with the demo titles) → <b>Bulk actions → Move to Trash</b>. Your own posts stay because they were unselected. Empty the trash afterwards.</li>
+    <li><b>Featured images</b> — every card depends on the featured image. Use <b>1200 × 675 px</b> (16:9), JPEG, under ~250 KB. Set them from the post editor’s <b>Featured image</b> box, or bulk-set with a plugin if you migrate old articles.</li>
+    <li><b>Update the menus</b> — Appearance → Menus → add your categories. Use one top-level item per section and keep child items for districts.</li>
+    <li><b>Set the homepage</b> — Settings → Reading → static page → <b>Home</b> (already done by the kit). If you built a new homepage, point Reading at it.</li>
+    <li><b>Permalinks</b> — Settings → Permalinks → <b>Post name</b> → Save. Clean URLs like <code>/your-article-slug/</code> are better for news SEO and ad networks.</li>
+    <li><b>Author box</b> — create real author accounts (Users → Add New) with display names and bios; the Post Info widget shows the author automatically.</li>
+  </ol>
+
+  <div class="tip"><b>Bulk import old articles?</b> Export them from your previous site (<b>Tools → Export</b>) and import here (<b>Tools → Import → WordPress</b>). Tick “Download and import file attachments” so featured images come along, then run <b>Tools → Regenerate thumbnails</b>.</div>
+
+  <!-- ============ 13 PERF ============ -->
+  <h2 id="perf"><span class="num">13</span>Performance &amp; SEO checklist</h2>
+  <p class="sub">A news site lives on repeat visits and Google News — these settings pay off fastest.</p>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3>Speed</h3>
+      <ul style="margin-bottom:0">
+        <li>Keep <b>Hello Elementor</b> — it is the lightest Elementor theme.</li>
+        <li>Turn on <b>Elementor → Settings → Features → Optimized Assets / Improved CSS Loading</b> (fetch styles only where needed).</li>
+        <li>Compress images (WebP + lazy load). Cap homepage featured images at 1200 × 675 px.</li>
+        <li>Limit homepage Loop Grids to 6–12 posts each; they multiply fast.</li>
+        <li>Use one caching layer only (LiteSpeed Cache <i>or</i> WP Rocket <i>or</i> host cache) and purge after design changes.</li>
+        <li>Add a CDN (Cloudflare free tier) for repeat readers across states.</li>
+        <li>Elementor → Tools → <b>Regenerate CSS</b> after big edits; delete unused templates.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>SEO</h3>
+      <ul style="margin-bottom:0">
+        <li>Settings → Permalinks → <b>Post name</b>.</li>
+        <li>Install an SEO plugin (Rank Math / Yoast / SEOPress) and connect <b>Google Search Console</b>.</li>
+        <li>Use one <b>H1</b> per page: the Post Title widget already outputs H1 on single posts — keep section headings at H2/H3.</li>
+        <li>Fill category titles + descriptions (they power archive titles).</li>
+        <li>Add a sitemap and submit it; enable News sitemap if you have a Google News policy page.</li>
+        <li>Keep 1200×675 featured images — they become the OpenGraph / Twitter card image.</li>
+        <li>Author pages with real names build E-E-A-T for news content.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Launch-day checklist</h3>
+  <ul>
+    <li>Logo + favicon uploaded · colours and fonts match the brand · menus complete</li>
+    <li>Demo posts removed, 5+ real articles published with featured images</li>
+    <li>Ticker shows real headlines (correct category slug) · GTranslate switcher works</li>
+    <li>Ad slots filled or removed · WhatsApp link opens the right group · YouTube link correct</li>
+    <li>Search popup tested on desktop + mobile · 404 page tested · footer links checked</li>
+    <li>Mobile pass: header toggle, loop grids (2 columns), share buttons reachable</li>
+    <li>Cache + CDN enabled, Elementor CSS regenerated, PageSpeed checked once</li>
+    <li>Backup taken and stored off-server</li>
+  </ul>
+
+  <!-- ============ 14 FAQ ============ -->
+  <h2 id="faq"><span class="num">14</span>Troubleshooting &amp; FAQ</h2>
+  <p class="sub">Every issue we have seen on a kit install, with the fix.</p>
+
+  <div class="faq">
+    <details open>
+      <summary>The kit import freezes or stops halfway (“Importing…” never finishes)</summary>
+      <div class="a">
+        <ol>
+          <li>Raise <code>memory_limit</code> to 256 MB, <code>max_execution_time</code> to 300 s, <code>upload_max_filesize</code> / <code>post_max_size</code> to 64 MB.</li>
+          <li>Turn off caching, security and optimization plugins for the duration of the import.</li>
+          <li>Import only what you need: untick <b>Content</b> to import just templates + settings (much lighter).</li>
+          <li>Still failing? Import locally (LocalWP / XAMPP), then migrate with All-in-One WP Migration.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary>Import finished but the homepage is blank / shows the blog index</summary>
+      <div class="a">
+        Go to <b>Settings → Reading</b> → “Your homepage displays” = <b>A static page</b> → choose <b>Home</b>. Then <b>Settings → Permalinks</b> → Save (this flushes rewrite rules). If the page exists but looks unstyled, run <b>Elementor → Tools → Regenerate CSS &amp; Data</b>.
+      </div>
+    </details>
+
+    <details>
+      <summary>Loop grids are empty or show “requires Elementor Pro”</summary>
+      <div class="a">
+        Elementor Pro is not active, or core and Pro versions do not match. Activate Pro under <b>Plugins</b>, and make sure Elementor core is 4.x if you installed the bundled Pro 4.3.1 (Pro 4.x needs Elementor 4.x). After fixing, open one grid and click <b>Update</b>.
+      </div>
+    </details>
+
+    <details>
+      <summary>Header / footer / single post design is not applied to the site</summary>
+      <div class="a">
+        Check the conditions: <b>Templates → Theme Builder</b> → each template should show <b>Entire site</b> (header/footer) or <b>All singular posts</b> / <b>All archives</b>. If it says “No condition”, open the template → <b>Settings</b> (bottom-left) → <b>Conditions</b> → add. Conflicts appear as “Conditions: 2 templates match” — Elementor shows the one with higher priority; delete the leftover.
+      </div>
+    </details>
+
+    <details>
+      <summary>The Hindi news ticker is empty</summary>
+      <div class="a">
+        Either PJ News Ticker is inactive, or the shortcode points at a category with no posts. Open the Shortcode widget on the homepage, replace <code>post_cat="…"</code> with a category slug that has published posts, or drop the attribute to show all posts. Also set <code>hide_if_empty="false"</code> while debugging so you can see the empty bar.
+      </div>
+    </details>
+
+    <details>
+      <summary>The GTranslate flag/dropdown does not appear in the footer</summary>
+      <div class="a">
+        Activate the GTranslate plugin, then open <b>Settings → GTranslate</b> and pick a widget look (dropdown / flags). If it is still invisible, an optimization plugin may be deferring its script — exclude GTranslate and <code>translate.google.com</code> from “delay JS” / CSP rules, then purge cache.
+      </div>
+    </details>
+
+    <details>
+      <summary>Icons (YouTube, WhatsApp, footer icons) show as empty squares</summary>
+      <div class="a">
+        Icons come from Font Awesome. In <b>Elementor → Settings → Advanced</b>, enable <b>Load Font Awesome 4 Support</b> (the kit uses <code>fab fa-…</code> classes) and make sure “Inline Font Icons” is off if your icons look broken. Then regenerate CSS. If you use the free Elementor Font Awesome 6 library only, pick the FA6 equivalent icon for each button.
+      </div>
+    </details>
+
+    <details>
+      <summary>Images are missing or blurry after the import</summary>
+      <div class="a">
+        Demo image files are downloaded from the kit’s source site during import — if that request failed, images stay external. Re-upload your own featured images (1200×675), then install “Regenerate Thumbnails” and run it once so all card sizes exist.
+      </div>
+    </details>
+
+    <details>
+      <summary>The Elementor editor is slow or the panel never loads</summary>
+      <div class="a">
+        <ul>
+          <li><b>Elementor → Tools → Safe Mode</b> to isolate a plugin conflict.</li>
+          <li>Disable “Loading animation”/heavy effects while designing, add them back at the end.</li>
+          <li>Ask the host to raise PHP memory to 256 MB and set <code>max_input_vars</code> to 5000 (big Elementor pages fail to save otherwise).</li>
+          <li>Try a different browser/profile — ad-blockers and privacy extensions sometimes break the editor’s REST calls.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>Can I use this kit on more than one site?</summary>
+      <div class="a">
+        The license covers the number of sites you bought for. Elementor Pro is a separate subscription from Elementor — activate it on your own domain. To reuse the design on a second site, export the templates you need (<b>Templates → Saved Templates → Export</b>) rather than copying Elementor Pro to other people.
+      </div>
+    </details>
+
+    <details>
+      <summary>How do I move the site to another domain later?</summary>
+      <div class="a">
+        Migrate with a plugin (All-in-One WP Migration / Duplicator), then fix absolute URLs: <b>Better Search Replace</b> for old→new domain, and <b>Elementor → Tools → Replace URL</b>. Re-save <b>Settings → Permalinks</b> and regenerate CSS. Logo, ad images and button links that used absolute URLs are the usual leftovers — check the header and ad widgets.
+      </div>
+    </details>
+
+    <details>
+      <summary>Can I change the design completely?</summary>
+      <div class="a">
+        Yes — the kit is only a starting point. Global colours and fonts rebrand it in minutes; Theme Builder templates and loop items let you rebuild any block. Nothing is locked or encoded, and no shortcode depends on the kit itself.
+      </div>
+    </details>
+  </div>
+
+  <!-- ============ 15 APPENDIX ============ -->
+  <h2 id="appendix"><span class="num">15</span>Appendix &amp; snippets</h2>
+  <p class="sub">Copy-paste extras that are commonly asked for.</p>
+
+  <h3>15.1 · Shortcode cheat sheet</h3>
+  <table>
+    <thead><tr><th>Shortcode</th><th>Where the kit uses it</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><code>[pj-news-ticker]</code></td><td>Homepage top bar</td><td><code>[pj-news-ticker num_posts="6" post_cat="rajya"]</code></td></tr>
+      <tr><td><code>[gtranslate]</code></td><td>Footer</td><td><code>[gtranslate]</code> or <code>[gtranslate type="dropdown"]</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3>15.2 · Small CSS additions</h3>
+  <p>Paste into <b>Site Settings → Custom CSS</b> (Pro) or <b>Appearance → Customize → Additional CSS</b>:</p>
+  <pre><code>/* Smooth back-to-top + anchor scrolling */
+html { scroll-behavior: smooth; }
+
+/* Keep long Hindi headlines to two lines in loop cards */
+.elementor-loop-item .elementor-heading-title{
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+
+/* Hide the header date strip on phones */
+@media (max-width:767px){
+  .datetime{ display:none; }
+}
+
+/* Make share buttons touch-friendly on mobile */
+@media (max-width:767px){
+  .elementor-share-btn{ min-width:42px; min-height:42px; }
+}</code></pre>
+
+  <h3>15.3 · Recommended image sizes</h3>
+  <table>
+    <thead><tr><th>Use</th><th>Size</th><th>Format</th></tr></thead>
+    <tbody>
+      <tr><td>Featured image (cards, single post)</td><td>1200 × 675</td><td>JPEG / WebP</td></tr>
+      <tr><td>Hero / big story card</td><td>1600 × 900</td><td>JPEG / WebP</td></tr>
+      <tr><td>Sidebar thumbnail</td><td>400 × 300</td><td>JPEG</td></tr>
+      <tr><td>Homepage banner ad</td><td>970 × 250 or 728 × 90</td><td>PNG / JPEG</td></tr>
+      <tr><td>Sidebar ad</td><td>300 × 250 or 300 × 600</td><td>PNG / JPEG</td></tr>
+      <tr><td>Logo</td><td>240 × 60 (2× export)</td><td>PNG / SVG</td></tr>
+      <tr><td>Site icon</td><td>512 × 512</td><td>PNG</td></tr>
+    </tbody>
+  </table>
+
+  <h3>15.4 · Where each template lives</h3>
+  <table>
+    <thead><tr><th>You want to edit…</th><th>Go to</th></tr></thead>
+    <tbody>
+      <tr><td>Header strip, logo, menus, YouTube button</td><td>Templates → Theme Builder → Header</td></tr>
+      <tr><td>Footer, translator, copyright</td><td>Templates → Theme Builder → FOOTER</td></tr>
+      <tr><td>Article page layout</td><td>Templates → Theme Builder → Single Post</td></tr>
+      <tr><td>Category / tag / search listing</td><td>Templates → Theme Builder → Archives and search page</td></tr>
+      <tr><td>404 screen</td><td>Templates → Theme Builder → 404 page look</td></tr>
+      <tr><td>Search overlay</td><td>Templates → Popups → Search</td></tr>
+      <tr><td>Card designs used inside grids</td><td>Templates → Loop Items</td></tr>
+      <tr><td>Homepage sections</td><td>Pages → Home → Edit with Elementor</td></tr>
+      <tr><td>Colours, fonts, logo, background</td><td>Site Settings (inside any Elementor editor)</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============ 16 SUPPORT ============ -->
+  <h2 id="support"><span class="num">16</span>Changelog &amp; support</h2>
+  <p class="sub">Versions and how to get help.</p>
+
+  <h3>Changelog</h3>
+  <table>
+    <thead><tr><th>Version</th><th>Date</th><th>Changes</th></tr></thead>
+    <tbody>
+      <tr><td><b>1.0</b></td><td>Initial release</td><td>First release: 14 templates, 20 demo posts, 3 menus, Hindi ticker header, ad slots, search popup, WhatsApp CTA. Exported on Elementor 3.30.3 + Elementor Pro 3.29.2.</td></tr>
+      <tr><td><b>Docs 1.0</b></td><td>This document</td><td>Full installation, anatomy, customization cookbook, ticker attribute reference, troubleshooting and appendix.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Support</h3>
+  <p>Before writing in, please have these ready — they make a fix possible in one reply:</p>
+  <ul>
+    <li>Site URL and hosting type (cPanel / VPS / managed WordPress)</li>
+    <li>WordPress, PHP, Elementor and Elementor Pro versions (<b>Tools → Site Health → Info</b>)</li>
+    <li>A screenshot of the error, and the exact step where it happened</li>
+    <li>Whether the site is a fresh install or already had content</li>
+  </ul>
+  <div class="card">
+    <h4 style="margin-top:0">Contact</h4>
+    <p style="margin:4px 0">Telegram: <b>@dhanjeerider</b> · Email: <b><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="98fcf0f9f6f2fdfdeaf1fcfdead8fff5f9f1f4b6fbf7f5">[email&#160;protected]</a></b></p>
+    <p style="margin:4px 0;color:var(--muted);font-size:14px">More designs: dktechnozone.in · dktheme.com · dhanjeerider.shop</p>
+  </div>
+
+  <footer class="doc">
+    <p><b>State News — Elementor Kit Documentation</b> · Docs v1.0 · Kit v2.0</p>
+    <p>Elementor and Elementor Pro are trademarks of Elementor Ltd. WordPress is a trademark of the WordPress Foundation. Demo photographs and headlines are placeholders and are not part of the licensed product. Do not redistribute Elementor Pro.</p>
+  </footer>
+</main>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  const btn = document.getElementById('menuBtn');
+  const side = document.getElementById('side');
+  btn.addEventListener('click', () => side.classList.toggle('open'));
+  side.addEventListener('click', e => { if (e.target.tagName === 'A' && window.innerWidth < 1024) side.classList.remove('open'); });
+  const links = [...document.querySelectorAll('nav.side a.navlink')];
+  const targets = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + en.target.id));
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+  targets.forEach(t => obs.observe(t));
+</script>
+</body>
+</html>
